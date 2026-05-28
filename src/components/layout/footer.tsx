@@ -4,7 +4,7 @@ import { Coffee, MessageCircle, Mail, Phone, MapPin, Share2, Globe } from "lucid
 
 export function Footer() {
   return (
-    <footer className="bg-stone-900 text-stone-300">
+    <footer className="bg-invert text-fg-inverse/70">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}

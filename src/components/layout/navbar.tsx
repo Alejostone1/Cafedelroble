@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { ShoppingCart, Menu, Search, User, X, Coffee, ArrowRight } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useCartStore } from "@/store/cart-store";
 import { formatPrice } from "@/lib/utils";
 import { cn } from "@/lib/utils";
@@ -98,18 +99,18 @@ export function Navbar() {
 
   return (
     <header className={cn(
-      "sticky top-0 z-50 w-full transition-all duration-300",
-      scrolled ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-stone-100" : "bg-white border-b border-stone-100"
+      "sticky top-0 z-50 w-full transition-all duration-300 border-b border-navbar-line",
+      scrolled ? "bg-navbar/95 backdrop-blur-md shadow-token-sm" : "bg-navbar"
     )}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-3">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-amber-600 flex items-center justify-center group-hover:bg-amber-700 transition-colors">
-              <Coffee className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center group-hover:bg-brand-hover transition-colors">
+              <Coffee className="w-4 h-4 text-brand-fg" />
             </div>
-            <span className="font-bold text-stone-900 text-lg tracking-tight hidden sm:block">
+            <span className="font-bold text-fg text-lg tracking-tight hidden sm:block">
               Café del Roble
             </span>
           </Link>
@@ -121,8 +122,8 @@ export function Navbar() {
                 className={cn(
                   "px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap",
                   pathname === link.href || pathname.startsWith(link.href + "/")
-                    ? "bg-amber-50 text-amber-700"
-                    : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"
+                    ? "bg-brand-subtle text-fg-brand"
+                    : "text-fg-secondary hover:text-fg hover:bg-surface-hover"
                 )}
               >
                 {link.label}
@@ -146,7 +147,7 @@ export function Navbar() {
                     onKeyDown={handleKeyDown}
                     onFocus={() => setEnfocado(true)}
                     placeholder="Buscar café, productos..."
-                    className="h-9 w-52 sm:w-72 rounded-xl border border-stone-200 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                    className="h-9 w-52 sm:w-72 rounded-xl border border-input-line bg-input pl-9 pr-4 text-sm text-fg placeholder:text-fg-muted focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
                   />
                   {cargando && (
                     <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 animate-spin text-amber-500" fill="none" viewBox="0 0 24 24">
@@ -161,35 +162,35 @@ export function Navbar() {
 
                 {/* Dropdown de sugerencias */}
                 {mostrarDropdown && (
-                  <div ref={dropdownRef} className="absolute top-full left-0 mt-2 w-full sm:w-80 bg-white rounded-2xl border border-stone-100 shadow-2xl shadow-stone-200/60 overflow-hidden z-50">
+                  <div ref={dropdownRef} className="absolute top-full left-0 mt-2 w-full sm:w-80 bg-elevated rounded-2xl border border-line shadow-token-xl overflow-hidden z-50">
                     {sugerencias.length > 0 ? (
                       <>
-                        <p className="px-4 py-2.5 text-xs text-stone-400 font-medium uppercase tracking-wider border-b border-stone-50">
+                        <p className="px-4 py-2.5 text-xs text-fg-muted font-medium uppercase tracking-wider border-b border-line-muted">
                           Resultados encontrados
                         </p>
                         <ul>
                           {sugerencias.map((s) => (
                             <li key={s.id}>
                               <button onMouseDown={() => irAProducto(s.slug)}
-                                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-amber-50 transition-colors text-left group"
+                                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-brand-subtle transition-colors text-left group"
                               >
-                                <div className="w-10 h-10 rounded-xl overflow-hidden bg-stone-100 shrink-0">
+                                <div className="w-10 h-10 rounded-xl overflow-hidden bg-muted-bg shrink-0">
                                   {s.image
                                     ? <Image src={s.image} alt={s.name} width={40} height={40} className="w-full h-full object-cover"/>
                                     : <div className="w-full h-full flex items-center justify-center text-lg">☕</div>
                                   }
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium text-stone-900 truncate group-hover:text-amber-700 transition-colors">{s.name}</p>
-                                  <p className="text-xs text-stone-400">{s.category}</p>
+                                  <p className="text-sm font-medium text-fg truncate group-hover:text-fg-brand transition-colors">{s.name}</p>
+                                  <p className="text-xs text-fg-muted">{s.category}</p>
                                 </div>
-                                <span className="text-sm font-bold text-amber-600 shrink-0">{formatPrice(s.price)}</span>
+                                <span className="text-sm font-bold text-fg-brand shrink-0">{formatPrice(s.price)}</span>
                               </button>
                             </li>
                           ))}
                         </ul>
                         <button onMouseDown={irACatalogo}
-                          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-stone-50 hover:bg-amber-50 text-sm font-medium text-stone-600 hover:text-amber-700 transition-colors border-t border-stone-100"
+                          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-muted-bg hover:bg-brand-subtle text-sm font-medium text-fg-secondary hover:text-fg-brand transition-colors border-t border-line-muted"
                         >
                           Ver todos los resultados <ArrowRight className="w-4 h-4" />
                         </button>
@@ -197,8 +198,8 @@ export function Navbar() {
                     ) : (
                       <div className="px-4 py-8 text-center">
                         <p className="text-3xl mb-3">🔍</p>
-                        <p className="text-sm font-medium text-stone-700">Sin resultados para &quot;{query}&quot;</p>
-                        <button onMouseDown={irACatalogo} className="mt-3 text-xs text-amber-600 hover:text-amber-700 font-medium underline">
+                        <p className="text-sm font-medium text-fg">Sin resultados para &quot;{query}&quot;</p>
+                        <button onMouseDown={irACatalogo} className="mt-3 text-xs text-fg-brand hover:text-fg-link font-medium underline">
                           Buscar en todo el catálogo
                         </button>
                       </div>
@@ -212,13 +213,16 @@ export function Navbar() {
               </button>
             )}
 
+            {/* Toggle tema */}
+            <ThemeToggle className="hidden sm:flex mx-1" />
+
             {/* Cuenta */}
-            <Link href="/auth/login" className="p-2 text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded-lg transition-colors hidden sm:flex" aria-label="Mi cuenta">
+            <Link href="/auth/login" className="p-2 text-fg-secondary hover:text-fg hover:bg-surface-hover rounded-lg transition-colors hidden sm:flex" aria-label="Mi cuenta">
               <User className="w-5 h-5" />
             </Link>
 
             {/* Carrito */}
-            <Link href="/carrito" className="relative p-2 text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded-lg transition-colors" aria-label={`Carrito: ${totalItems}`}>
+            <Link href="/carrito" className="relative p-2 text-fg-secondary hover:text-fg hover:bg-surface-hover rounded-lg transition-colors" aria-label={`Carrito: ${totalItems}`}>
               <ShoppingCart className="w-5 h-5" />
               {totalItems > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-amber-600 text-white text-[10px] font-bold flex items-center justify-center">
@@ -230,17 +234,17 @@ export function Navbar() {
             {/* Menú móvil */}
             <Sheet>
               <SheetTrigger asChild>
-                <button className="p-2 text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded-lg transition-colors md:hidden" aria-label="Menú">
+                <button className="p-2 text-fg-secondary hover:text-fg hover:bg-surface-hover rounded-lg transition-colors md:hidden" aria-label="Menú">
                   <Menu className="w-5 h-5" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-72">
+              <SheetContent side="right" className="w-72 bg-surface border-l border-line">
                 <div className="flex flex-col gap-1 mt-6">
                   <Link href="/" className="flex items-center gap-2 mb-5">
-                    <div className="w-8 h-8 rounded-lg bg-amber-600 flex items-center justify-center">
-                      <Coffee className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
+                      <Coffee className="w-4 h-4 text-brand-fg" />
                     </div>
-                    <span className="font-bold text-stone-900 text-lg">Café del Roble</span>
+                    <span className="font-bold text-fg text-lg">Café del Roble</span>
                   </Link>
                   {/* Buscador en móvil */}
                   <form
@@ -251,25 +255,26 @@ export function Navbar() {
                       if (q) router.push(`/productos?q=${encodeURIComponent(q)}`);
                     }}
                   >
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-fg-muted" />
                     <input name="mq" type="search" placeholder="Buscar productos..."
-                      className="w-full h-10 rounded-xl border border-stone-200 pl-9 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="w-full h-10 rounded-xl border border-input-line bg-input pl-9 pr-3 text-sm text-fg placeholder:text-fg-muted focus:outline-none focus:ring-2 focus:ring-ring"
                     />
                   </form>
                   {navLinks.map((link) => (
                     <Link key={link.href} href={link.href}
                       className={cn(
                         "px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                        pathname === link.href ? "bg-amber-50 text-amber-700" : "text-stone-700 hover:bg-stone-50"
+                        pathname === link.href ? "bg-brand-subtle text-fg-brand" : "text-fg-secondary hover:bg-surface-hover hover:text-fg"
                       )}
                     >
                       {link.label}
                     </Link>
                   ))}
-                  <div className="mt-4 pt-4 border-t border-stone-100">
-                    <Link href="/auth/login" className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors">
+                  <div className="mt-4 pt-4 border-t border-line flex items-center justify-between">
+                    <Link href="/auth/login" className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-fg-secondary hover:bg-surface-hover hover:text-fg transition-colors">
                       <User className="w-4 h-4" /> Mi cuenta
                     </Link>
+                    <ThemeToggle size="sm" />
                   </div>
                 </div>
               </SheetContent>

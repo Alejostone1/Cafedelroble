@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/providers/session-provider";
 import { QueryProvider } from "@/providers/query-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -30,41 +31,31 @@ export const metadata: Metadata = {
     siteName: "Café del Roble",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
   },
-  twitter: {
-    card: "summary_large_image",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  twitter: { card: "summary_large_image" },
+  robots: { index: true, follow: true },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        <SessionProvider>
-          <QueryProvider>
-            {children}
-            <Toaster
-              position="bottom-right"
-              toastOptions={{
-                style: {
-                  background: "white",
-                  border: "1px solid #e7e5e4",
-                  color: "#1c1917",
-                },
-              }}
-            />
-          </QueryProvider>
-        </SessionProvider>
+    <html lang="es" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
+      <body className="min-h-full flex flex-col bg-base text-fg">
+        <ThemeProvider>
+          <SessionProvider>
+            <QueryProvider>
+              {children}
+              <Toaster
+                position="bottom-right"
+                toastOptions={{
+                  style: {
+                    background: "var(--surface)",
+                    border: "1px solid var(--line)",
+                    color: "var(--fg)",
+                  },
+                }}
+              />
+            </QueryProvider>
+          </SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
